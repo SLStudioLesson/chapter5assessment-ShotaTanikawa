@@ -114,7 +114,10 @@ public class TaskDataAccess {
                 User repUser = userDataAccess.findByCode(repUserCode);
 
                 //Taskオブジェクトにマッピング
-                task = new Task(repUserCode, name, status, repUser);
+                task = new Task(taskCode, name, status, repUser);
+
+                
+
                 break;
             }
         } catch (IOException e) {
@@ -142,6 +145,8 @@ public class TaskDataAccess {
                 }
                 writer.write(line);
                 writer.newLine();
+
+                
             }
         } catch (IOException e) {
             e.printStackTrace();

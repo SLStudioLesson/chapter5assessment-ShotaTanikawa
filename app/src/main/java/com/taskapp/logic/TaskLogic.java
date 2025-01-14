@@ -102,7 +102,7 @@ public class TaskLogic {
             }
 
             //新しいTaskを作成
-            Task newTask = new Task(code, name, repUserCode, repUser);
+            Task newTask = new Task(code, name, 0, repUser);
             taskDataAccess.save(newTask);
 
             //新しいLogを作成
@@ -144,6 +144,8 @@ public class TaskLogic {
             //ログの更新
             Log newLog = new Log(code, loginUser.getCode(), status, LocalDate.now());
             logDataAccess.save(newLog);
+
+            
             
     }
 
