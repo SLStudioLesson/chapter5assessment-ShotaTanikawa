@@ -104,11 +104,23 @@ public class TaskDataAccess {
             while ((line = reader.readLine()) != null) {
                 String[] values = line.split(",");
                 int taskCode = Integer.parseInt(values[0]);
+
+                if (code != taskCode) continue;
+
+                String name = values[1];
+                int status = Integer.parseInt(values[2]);
+                int repUserCode = Integer.parseInt(values[3]);
+
+                User repUser = userDataAccess.findByCode(repUserCode);
+
+                //Taskオブジェクトにマッピング
+                task = new Task(repUserCode, name, status, repUser);
+                break;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return task;
     }
 
     /**
@@ -120,9 +132,8 @@ public class TaskDataAccess {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             //タイトルを書き込む
             writer.write("Code,Name,Status,Rep_User_Code\n");
-
-            String line;
             for (Task task : tasks) {
+                String line;
                 //編集対象のTaskならUpdateTaskの情報を書きこむ
                 if (task.getCode() == updateTask.getCode()) {
                     line = createLine(updateTask);

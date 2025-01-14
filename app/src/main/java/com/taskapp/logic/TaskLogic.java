@@ -72,7 +72,7 @@ public class TaskLogic {
 
             //出力
             System.out.println(index +  ". " + task.getName() + ", 担当者名：" +
-                    repUserText + ", ステータス" + statusText);
+                    repUserText + ", ステータス：" + statusText);
 
             index++;
         }
@@ -121,9 +121,31 @@ public class TaskLogic {
      * @param loginUser ログインユーザー
      * @throws AppException タスクコードが存在しない、またはステータスが前のステータスより1つ先でない場合にスローされます
      */
-    // public void changeStatus(int code, int status,
-    //                         User loginUser) throws AppException {
-    // }
+    public void changeStatus(int code, int status,
+                            User loginUser) throws AppException {
+
+            //タスクを検索する
+            Task task = taskDataAccess.findByCode(code);
+
+            if (task == null) {
+                throw new AppException("存在するタスクコードを入力してください");
+            }
+
+            //ステータスのバリデーション
+            int currentStatus = task.getStatus();
+            if (!((currentStatus == 0 && status ==1) || (currentStatus == 1 && status == 2))) {
+                throw new AppException("ステータスは、前のステータスより1つ先のもののみを選択してください");
+            }
+
+            //ステータスの更新
+            task.setStatus(status);
+            taskDataAccess.update(task);
+
+            //ログの更新
+            Log newLog = new Log(code, loginUser.getCode(), status, LocalDate.now());
+            logDataAccess.save(newLog);
+            
+    }
 
     /**
      * タスクを削除します。
